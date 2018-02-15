@@ -194,7 +194,7 @@ Card = function (stack, targetElement) {
             x = lastTranslate.x + e.deltaX;
             y = lastTranslate.y + e.deltaY;
 
-            if (config.isThrowOut(x, targetElement, config.throwOutConfidence(x, targetElement))) {
+            if (config.isThrowOut(x, targetElement, config.throwOutConfidence(x, y, targetElement))) {
                 card.throwOut(x, y);
             } else {
                 card.throwIn(x, y);
@@ -308,7 +308,7 @@ Card = function (stack, targetElement) {
 
             eventEmitter.trigger('dragmove', {
                 target: targetElement,
-                throwOutConfidence: config.throwOutConfidence(x, targetElement),
+                throwOutConfidence: config.throwOutConfidence(x, y, targetElement),
                 throwDirection: x < 0 ? Card.DIRECTION_LEFT : Card.DIRECTION_RIGHT
             });
         };
@@ -497,8 +497,8 @@ Card.appendToParent = function (element) {
  * @param {HTMLElement} element Element.
  * @return {Number}
  */
-Card.throwOutConfidence = function (offset, element) {
-    return Math.min(Math.abs(offset) / element.offsetWidth, 1);
+Card.throwOutConfidence = function (xoffset, yoffset, element) {
+    return Math.min(Math.max(Math.abs(yoffset) / element.offsetHeight, Math.abs(xoffset) / element.offsetWidth), 1);
 };
 
 /**
